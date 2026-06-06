@@ -42,7 +42,8 @@ function initCardColorThief(container: Element) {
           const color = getColorSync(img);
           if (color) {
             const [r, g, b] = color.array();
-            (card as HTMLElement).style.setProperty('--card-glow', `rgba(${r}, ${g}, ${b}, 0.25)`);
+            (card as HTMLElement).style.boxShadow = `0 8px 30px rgba(${r},${g},${b},0.3)`;
+            (card as HTMLElement).style.borderColor = `rgba(${r},${g},${b},0.4)`;
           }
         }
       } catch (e) {
@@ -51,7 +52,8 @@ function initCardColorThief(container: Element) {
     });
 
     card.addEventListener('mouseleave', () => {
-      (card as HTMLElement).style.setProperty('--card-glow', 'rgba(255, 255, 255, 0.03)');
+      (card as HTMLElement).style.boxShadow = '';
+      (card as HTMLElement).style.borderColor = '';
     });
   });
 }
@@ -270,15 +272,37 @@ function initSongPage(container: Element) {
       try {
         const palette = getPaletteSync(heroImgEl, { colorCount: 3 });
         if (palette && palette.length > 0) {
-          const [r1, g1, b1] = palette[0].array();
-          const [r2, g2, b2] = palette[1] ? palette[1].array() : palette[0].array();
-          document.documentElement.style.setProperty('--page-accent', `rgb(${r1}, ${g1}, ${b1})`);
-          document.documentElement.style.setProperty('--page-accent-2', `rgb(${r2}, ${g2}, ${b2})`);
-          // Apply subtle gradient to content area
-          const content = container.querySelector('.song-detail__content') as HTMLElement;
-          if (content) {
-            content.style.background = `linear-gradient(180deg, rgba(${r1}, ${g1}, ${b1}, 0.05) 0%, transparent 40%)`;
+          const dominant = palette[0].array();
+          const secondary = palette[1] ? palette[1].array() : palette[0].array();
+          const r1 = dominant[0], g1 = dominant[1], b1 = dominant[2];
+          const r2 = secondary[0], g2 = secondary[1], b2 = secondary[2];
+
+          document.documentElement.style.setProperty('--accent', `rgb(${r1},${g1},${b1})`);
+          document.documentElement.style.setProperty('--accent-secondary', `rgb(${r2},${g2},${b2})`);
+          document.documentElement.style.setProperty('--hero-glow', `rgba(${r1},${g1},${b1},0.15)`);
+
+          // Apply glow to cover image
+          const heroCover = container.querySelector('.hero-cover') as HTMLElement;
+          if (heroCover) {
+            heroCover.style.boxShadow = `0 20px 60px rgba(${r1},${g1},${b1},0.4)`;
           }
+
+          // Apply gradient tint to hero background overlay
+          const heroOverlay = container.querySelector('.hero-overlay') as HTMLElement;
+          if (heroOverlay) {
+            heroOverlay.style.background = `linear-gradient(to bottom, rgba(${r1},${g1},${b1},0.08) 0%, #080808 70%)`;
+          }
+
+          // Apply accent to mood tags border color
+          container.querySelectorAll('.mood-tag').forEach(tag => {
+            (tag as HTMLElement).style.borderColor = `rgba(${r1},${g1},${b1},0.5)`;
+            (tag as HTMLElement).style.color = `rgb(${r1},${g1},${b1})`;
+          });
+
+          // Apply to section headings like SUMMARY, THEMES etc
+          container.querySelectorAll('.breakdown__label').forEach(el => {
+            (el as HTMLElement).style.color = `rgb(${r1},${g1},${b1})`;
+          });
         }
       } catch (e) {
         /* ignore */
@@ -353,8 +377,9 @@ function initBarba() {
             ScrollTrigger.getAll().forEach((t) => t.kill());
             destroyLenis();
             // Reset CSS vars
-            document.documentElement.style.removeProperty('--page-accent');
-            document.documentElement.style.removeProperty('--page-accent-2');
+            document.documentElement.style.removeProperty('--accent');
+            document.documentElement.style.removeProperty('--accent-secondary');
+            document.documentElement.style.removeProperty('--hero-glow');
           },
           beforeEnter(data) {
             window.scrollTo(0, 0);
