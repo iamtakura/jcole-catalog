@@ -12,17 +12,6 @@ export function getStaticPaths() {
 const { song } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
-// Cover mapping
-function getCoverPath(album: string | null): string {
-  const coverMap: Record<string, string> = {
-    'The Off-Season': 'the-off-season',
-    'Might Delete Later': 'might-delete-later',
-    'The Fall-Off': 'the-fall-off',
-  };
-  const slug = album ? coverMap[album] || 'singles-features' : 'singles-features';
-  return `${base}images/covers/${slug}.png`;
-}
-
 function getTypeLabel(type: string): string {
   const labels: Record<string, string> = {
     album_track: 'Album Track',
@@ -33,7 +22,9 @@ function getTypeLabel(type: string): string {
   return labels[type] || type;
 }
 
-const coverSrc = getCoverPath(song.album);
+const coverSrc = song.cover_image
+  ? `${base.replace(/\/$/, '')}/${song.cover_image.replace(/^\//, '')}`
+  : `${base.replace(/\/$/, '')}/images/covers/singles-features.png`;
 const typeLabel = getTypeLabel(song.type);
 
 // Find prev/next songs
