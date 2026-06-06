@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import SongCard from '../components/SongCard.astro';
+import FilterBar from '../components/FilterBar.astro';
+import songs from '../data/songs.json';
+---
+
+<Base title="Catalog" namespace="home">
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1 class="hero__title">DREAMVILLE.</h1>
+    <p class="hero__subtitle">A J. Cole Archive</p>
+    <div class="hero__scroll-indicator">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Catalog Section -->
+  <section class="container" style="padding-bottom: 96px;">
+    <div class="section-header">
+      <span class="section-header__label">The Complete Collection</span>
+      <h2 class="section-header__title">All Songs</h2>
+    </div>
+
+    <FilterBar />
+
+    <div class="results-count" id="results-count">
+      Showing <span>{songs.length}</span> songs
+    </div>
+
+    <div class="song-grid" id="song-grid">
+      {songs.map((song) => (
+        <SongCard song={song} />
+      ))}
+      <div class="no-results" id="no-results" style="display: none;">
+        <h3>No songs found</h3>
+        <p>Try adjusting your filters or search term.</p>
+      </div>
+    </div>
+  </section>
+</Base>

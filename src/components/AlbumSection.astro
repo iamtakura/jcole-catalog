@@ -1,0 +1,14 @@
+---
+interface Props {
+  album: string;
+  year: number;
+  count: number;
+}
+
+const { album, year, count } = Astro.props;
+---
+
+<div class="section-header">
+  <span class="section-header__label">{year} · {count} tracks</span>
+  <h2 class="section-header__title">{album}</h2>
+</div>

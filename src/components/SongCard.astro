@@ -1,0 +1,75 @@
+---
+interface Props {
+  song: {
+    id: string;
+    title: string;
+    album: string | null;
+    year: number;
+    type: string;
+    features: string[];
+    mood: string[];
+  };
+}
+
+const { song } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+function getCoverPath(album: string | null): string {
+  const coverMap: Record<string, string> = {
+    'The Off-Season': 'the-off-season',
+    'Might Delete Later': 'might-delete-later',
+    'The Fall-Off': 'the-fall-off',
+  };
+  const slug = album ? coverMap[album] || 'singles-features' : 'singles-features';
+  return `${base}images/covers/${slug}.png`;
+}
+
+function getTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    album_track: 'Album Track',
+    mixtape_track: 'Mixtape',
+    single: 'Single',
+    feature: 'Feature',
+  };
+  return labels[type] || type;
+}
+
+const coverSrc = getCoverPath(song.album);
+const typeLabel = getTypeLabel(song.type);
+---
+
+<a
+  href={`${base}songs/${song.id}/`}
+  class="song-card"
+  data-song={song.id}
+  data-type={song.type}
+  data-moods={song.mood.join(',')}
+  data-album={song.album || 'Singles & Features'}
+  data-year={String(song.year)}
+  data-title={song.title}
+>
+  <div class="song-card__cover">
+    <img src={coverSrc} alt={`${song.album || 'Singles'} cover`} loading="lazy" crossorigin="anonymous" />
+    <div class="song-card__badge">
+      <span class={`type-badge type-badge--${song.type}`}>{typeLabel}</span>
+    </div>
+  </div>
+  <div class="song-card__body">
+    <h3 class="song-card__title">{song.title}</h3>
+    <div class="song-card__meta">
+      <span>{song.album || 'Single / Feature'}</span>
+      <span class="song-card__meta-sep"></span>
+      <span>{song.year}</span>
+    </div>
+    {song.features.length > 0 && (
+      <p class="song-card__features">
+        feat. <span>{song.features.join(', ')}</span>
+      </p>
+    )}
+    <div class="song-card__moods">
+      {song.mood.map((m) => (
+        <span class={`mood-tag mood-tag--${m}`}>{m}</span>
+      ))}
+    </div>
+  </div>
+</a>

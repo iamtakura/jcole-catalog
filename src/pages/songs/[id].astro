@@ -1,0 +1,159 @@
+---
+import Base from '../../layouts/Base.astro';
+import songs from '../../data/songs.json';
+
+export function getStaticPaths() {
+  return songs.map((song: any) => ({
+    params: { id: song.id },
+    props: { song },
+  }));
+}
+
+const { song } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+// Cover mapping
+function getCoverPath(album: string | null): string {
+  const coverMap: Record<string, string> = {
+    'The Off-Season': 'the-off-season',
+    'Might Delete Later': 'might-delete-later',
+    'The Fall-Off': 'the-fall-off',
+  };
+  const slug = album ? coverMap[album] || 'singles-features' : 'singles-features';
+  return `${base}images/covers/${slug}.png`;
+}
+
+function getTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    album_track: 'Album Track',
+    mixtape_track: 'Mixtape',
+    single: 'Single',
+    feature: 'Feature',
+  };
+  return labels[type] || type;
+}
+
+const coverSrc = getCoverPath(song.album);
+const typeLabel = getTypeLabel(song.type);
+
+// Find prev/next songs
+const currentIndex = songs.findIndex((s: any) => s.id === song.id);
+const prevSong = currentIndex > 0 ? songs[currentIndex - 1] : null;
+const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : null;
+---
+
+<Base title={song.title} description={song.breakdown?.summary || `${song.title} by J. Cole`} namespace="song">
+  <div class="song-detail">
+    <!-- Hero -->
+    <div class="song-detail__hero">
+      <img class="song-detail__hero-img" src={coverSrc} alt={`${song.album || 'Singles'} cover`} crossorigin="anonymous" />
+      <div class="song-detail__hero-overlay"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="song-detail__content">
+      <!-- Back button -->
+      <a href={`${base}`} class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Catalog
+      </a>
+
+      <!-- Header -->
+      <div class="song-detail__header">
+        <h1 class="song-detail__title">{song.title}</h1>
+        <p class="song-detail__album-link">{song.album || 'Single / Feature'}</p>
+
+        <!-- Meta Grid -->
+        <div class="song-detail__meta-grid">
+          <div class="song-detail__meta-item">
+            <span class="song-detail__meta-label">Year</span>
+            <span class="song-detail__meta-value">{song.year}</span>
+          </div>
+          <div class="song-detail__meta-item">
+            <span class="song-detail__meta-label">Type</span>
+            <span class="song-detail__meta-value">
+              <span class={`type-badge type-badge--${song.type}`}>{typeLabel}</span>
+            </span>
+          </div>
+          {song.producers && song.producers.length > 0 && (
+            <div class="song-detail__meta-item">
+              <span class="song-detail__meta-label">Producers</span>
+              <span class="song-detail__meta-value">{song.producers.join(', ')}</span>
+            </div>
+          )}
+          {song.features && song.features.length > 0 && (
+            <div class="song-detail__meta-item">
+              <span class="song-detail__meta-label">Features</span>
+              <span class="song-detail__meta-value">{song.features.join(', ')}</span>
+            </div>
+          )}
+        </div>
+
+        <!-- Mood Tags -->
+        {song.mood && song.mood.length > 0 && (
+          <div class="song-detail__tags">
+            {song.mood.map((m: string) => (
+              <span class={`mood-tag mood-tag--${m}`}>{m}</span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Breakdown -->
+      {song.breakdown && (
+        <div class="breakdown">
+          {song.breakdown.summary && (
+            <div class="breakdown__section">
+              <div class="breakdown__label">Summary</div>
+              <p class="breakdown__summary">{song.breakdown.summary}</p>
+            </div>
+          )}
+
+          {song.breakdown.themes && song.breakdown.themes.length > 0 && (
+            <div class="breakdown__section">
+              <div class="breakdown__label">Themes</div>
+              <div class="breakdown__themes">
+                {song.breakdown.themes.map((theme: string) => (
+                  <span class="breakdown__theme-tag">{theme}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {song.breakdown.story && (
+            <div class="breakdown__section">
+              <div class="breakdown__label">The Story</div>
+              <p class="breakdown__text">{song.breakdown.story}</p>
+            </div>
+          )}
+
+          {song.breakdown.inspiration && (
+            <div class="breakdown__section">
+              <div class="breakdown__label">Inspiration</div>
+              <p class="breakdown__text">{song.breakdown.inspiration}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      <!-- Song Navigation -->
+      <nav class="song-nav">
+        {prevSong ? (
+          <a href={`${base}songs/${prevSong.id}/`} class="song-nav__link">
+            <span class="song-nav__link-label">← Previous</span>
+            <span class="song-nav__link-title">{prevSong.title}</span>
+          </a>
+        ) : <div></div>}
+        {nextSong ? (
+          <a href={`${base}songs/${nextSong.id}/`} class="song-nav__link song-nav__link--next">
+            <span class="song-nav__link-label">Next →</span>
+            <span class="song-nav__link-title">{nextSong.title}</span>
+          </a>
+        ) : <div></div>}
+      </nav>
+    </div>
+  </div>
+</Base>

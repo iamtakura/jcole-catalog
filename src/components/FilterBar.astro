@@ -1,0 +1,76 @@
+---
+
+---
+
+<div class="filter-bar">
+  <!-- Search -->
+  <div class="filter-bar__search">
+    <svg class="filter-bar__search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input
+      type="text"
+      id="filter-search"
+      class="filter-bar__search-input"
+      placeholder="Search songs..."
+      autocomplete="off"
+    />
+  </div>
+
+  <div class="filter-bar__groups">
+    <!-- Album -->
+    <div class="filter-bar__group">
+      <span class="filter-bar__group-label">Album</span>
+      <div class="filter-bar__pills">
+        <button class="filter-pill" data-filter-group="album" data-filter-value="The Off-Season">The Off-Season</button>
+        <button class="filter-pill" data-filter-group="album" data-filter-value="Might Delete Later">Might Delete Later</button>
+        <button class="filter-pill" data-filter-group="album" data-filter-value="The Fall-Off">The Fall-Off</button>
+        <button class="filter-pill" data-filter-group="album" data-filter-value="Singles & Features">Singles & Features</button>
+      </div>
+    </div>
+
+    <!-- Type -->
+    <div class="filter-bar__group">
+      <span class="filter-bar__group-label">Type</span>
+      <div class="filter-bar__pills">
+        <button class="filter-pill" data-filter-group="type" data-filter-value="album_track">Album Track</button>
+        <button class="filter-pill" data-filter-group="type" data-filter-value="mixtape_track">Mixtape</button>
+        <button class="filter-pill" data-filter-group="type" data-filter-value="single">Single</button>
+        <button class="filter-pill" data-filter-group="type" data-filter-value="feature">Feature</button>
+      </div>
+    </div>
+
+    <!-- Mood -->
+    <div class="filter-bar__group">
+      <span class="filter-bar__group-label">Mood</span>
+      <div class="filter-bar__pills">
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="hype">Hype</button>
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="chill">Chill</button>
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="introspective">Introspective</button>
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="motivational">Motivational</button>
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="romantic">Romantic</button>
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="melancholic">Melancholic</button>
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="aggressive">Aggressive</button>
+        <button class="filter-pill" data-filter-group="mood" data-filter-value="spiritual">Spiritual</button>
+      </div>
+    </div>
+
+    <!-- Year -->
+    <div class="filter-bar__group">
+      <span class="filter-bar__group-label">Year</span>
+      <div class="filter-bar__pills">
+        <button class="filter-pill" data-filter-group="year" data-filter-value="2020">2020</button>
+        <button class="filter-pill" data-filter-group="year" data-filter-value="2021">2021</button>
+        <button class="filter-pill" data-filter-group="year" data-filter-value="2022">2022</button>
+        <button class="filter-pill" data-filter-group="year" data-filter-value="2023">2023</button>
+        <button class="filter-pill" data-filter-group="year" data-filter-value="2024">2024</button>
+        <button class="filter-pill" data-filter-group="year" data-filter-value="2026">2026</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Filters -->
+  <div class="active-filters" id="active-filters"></div>
+  <button class="clear-all-btn" id="clear-all-filters" style="display: none;">Clear all filters</button>
+</div>
