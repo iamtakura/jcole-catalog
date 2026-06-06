@@ -44,7 +44,7 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
     <!-- Content -->
     <div class="song-detail__content">
       <!-- Back button -->
-      <a href={`${base}`} class="back-btn">
+      <a href={`${base.replace(/\/$/, '')}/`} class="back-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
@@ -133,13 +133,13 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
       <!-- Song Navigation -->
       <nav class="song-nav">
         {prevSong ? (
-          <a href={`${base}songs/${prevSong.id}/`} class="song-nav__link">
+          <a href={`${base.replace(/\/$/, '')}/songs/${prevSong.id}/`} class="song-nav__link">
             <span class="song-nav__link-label">← Previous</span>
             <span class="song-nav__link-title">{prevSong.title}</span>
           </a>
         ) : <div></div>}
         {nextSong ? (
-          <a href={`${base}songs/${nextSong.id}/`} class="song-nav__link song-nav__link--next">
+          <a href={`${base.replace(/\/$/, '')}/songs/${nextSong.id}/`} class="song-nav__link song-nav__link--next">
             <span class="song-nav__link-label">Next →</span>
             <span class="song-nav__link-title">{nextSong.title}</span>
           </a>

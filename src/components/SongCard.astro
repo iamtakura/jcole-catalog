@@ -32,7 +32,7 @@ const typeLabel = getTypeLabel(song.type);
 ---
 
 <a
-  href={`${base}songs/${song.id}/`}
+  href={`${base.replace(/\/$/, '')}/songs/${song.id}/`}
   class="song-card"
   data-song={song.id}
   data-type={song.type}

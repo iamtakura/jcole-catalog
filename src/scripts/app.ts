@@ -316,71 +316,82 @@ function initSongPage(container: Element) {
 function initBarba() {
   const overlay = document.getElementById('transition-overlay');
 
-  barba.init({
-    preventRunning: true,
-    transitions: [
-      {
-        name: 'fade-slide',
-        leave(data) {
-          const done = (this as any).async();
-          if (prefersReducedMotion) {
-            if (overlay) overlay.style.opacity = '1';
-            done();
-            return;
-          }
-          const tl = gsap.timeline({ onComplete: done });
-          if (overlay) {
-            tl.to(overlay, { opacity: 1, duration: 0.3, ease: 'power2.inOut' });
-          }
-          tl.to(data.current.container, {
-            opacity: 0,
-            y: -20,
-            duration: 0.3,
-            ease: 'power2.inOut',
-          }, '<');
-        },
-        afterLeave() {
-          ScrollTrigger.getAll().forEach((t) => t.kill());
-          destroyLenis();
-          // Reset CSS vars
-          document.documentElement.style.removeProperty('--page-accent');
-          document.documentElement.style.removeProperty('--page-accent-2');
-        },
-        beforeEnter(data) {
-          window.scrollTo(0, 0);
-          // Ensure new container starts hidden
-          gsap.set(data.next.container, { opacity: 0, y: 20 });
-        },
-        enter(data) {
-          const done = (this as any).async();
-          const overlay = document.getElementById('transition-overlay');
-          if (prefersReducedMotion) {
-            gsap.set(data.next.container, { opacity: 1, y: 0 });
-            if (overlay) overlay.style.opacity = '0';
-            done();
-            return;
-          }
-          const tl = gsap.timeline({ onComplete: done });
-          if (overlay) {
-            tl.to(overlay, { opacity: 0, duration: 0.3, ease: 'power2.inOut' });
-          }
-          tl.to(data.next.container, {
-            opacity: 1,
-            y: 0,
-            duration: 0.4,
-            ease: 'power3.out',
-          }, '<');
-        },
-        afterEnter(data) {
-          initLenis();
-          const namespace = data.next.namespace;
-          if (namespace === 'home') initHomePage(data.next.container);
-          else if (namespace === 'song') initSongPage(data.next.container);
-          ScrollTrigger.refresh();
-        },
-      },
-    ],
+  barba.hooks.afterEnter(() => {
+    window.scrollTo(0, 0);
   });
+
+  barba.hooks.after(() => {
+    // Reinitialize Lenis and GSAP ScrollTrigger after each transition
+    ScrollTrigger.refresh();
+  });
+
+  if (document.querySelector('[data-barba="wrapper"]')) {
+    barba.init({
+      preventRunning: true,
+      transitions: [
+        {
+          name: 'fade-slide',
+          leave(data) {
+            const done = (this as any).async();
+            if (prefersReducedMotion) {
+              if (overlay) overlay.style.opacity = '1';
+              done();
+              return;
+            }
+            const tl = gsap.timeline({ onComplete: done });
+            if (overlay) {
+              tl.to(overlay, { opacity: 1, duration: 0.3, ease: 'power2.inOut' });
+            }
+            tl.to(data.current.container, {
+              opacity: 0,
+              y: -20,
+              duration: 0.3,
+              ease: 'power2.inOut',
+            }, '<');
+          },
+          afterLeave() {
+            ScrollTrigger.getAll().forEach((t) => t.kill());
+            destroyLenis();
+            // Reset CSS vars
+            document.documentElement.style.removeProperty('--page-accent');
+            document.documentElement.style.removeProperty('--page-accent-2');
+          },
+          beforeEnter(data) {
+            window.scrollTo(0, 0);
+            // Ensure new container starts hidden
+            gsap.set(data.next.container, { opacity: 0, y: 20 });
+          },
+          enter(data) {
+            const done = (this as any).async();
+            const overlay = document.getElementById('transition-overlay');
+            if (prefersReducedMotion) {
+              gsap.set(data.next.container, { opacity: 1, y: 0 });
+              if (overlay) overlay.style.opacity = '0';
+              done();
+              return;
+            }
+            const tl = gsap.timeline({ onComplete: done });
+            if (overlay) {
+              tl.to(overlay, { opacity: 0, duration: 0.3, ease: 'power2.inOut' });
+            }
+            tl.to(data.next.container, {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: 'power3.out',
+            }, '<');
+          },
+          afterEnter(data) {
+            initLenis();
+            const namespace = data.next.namespace;
+            if (namespace === 'home') initHomePage(data.next.container);
+            else if (namespace === 'song') initSongPage(data.next.container);
+            ScrollTrigger.refresh();
+          },
+        },
+      ],
+    });
+  }
 }
 
 // ─── DOMContentLoaded ───────────────────────────────────────────────
