@@ -136,6 +136,7 @@ import songs from '../data/songs.json';
     flex-wrap: wrap;
     gap: 0.3rem;
     margin-top: 0.25rem;
+    min-height: 2rem;
   }
 
   .mood-pill {
@@ -179,5 +180,17 @@ import songs from '../data/songs.json';
 
   @media (max-width: 640px) {
     .songs-grid { grid-template-columns: repeat(2, 1fr); padding: 1rem; }
+  }
+
+  [data-barba-namespace="home"] .type-badge {
+    font-size: 0.55rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    color: rgba(255,255,255,0.4) !important;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
   }
 </style>
