@@ -15,11 +15,6 @@ import songs from '../data/songs.json';
 
   <!-- Catalog Section -->
   <section class="container" style="padding-bottom: 96px;">
-    <div class="section-header">
-      <span class="section-header__label">The Complete Collection</span>
-      <h2 class="section-header__title">All Songs</h2>
-    </div>
-
     <FilterBar />
 
     <div class="results-count" id="results-count">
@@ -81,11 +76,38 @@ import songs from '../data/songs.json';
     transform: translateY(-4px);
   }
 
+  .card-cover-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+  }
+
   .song-card-image {
     width: 100%;
-    aspect-ratio: 1 / 1;
+    height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .song-card:hover .song-card-image {
+    transform: scale(1.05);
+  }
+
+  .card-title-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 0.75rem 0.75rem;
+    font-size: clamp(0.9rem, 2vw, 1.4rem);
+    font-weight: 900;
+    color: rgba(255,255,255,0.12);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    pointer-events: none;
   }
 
   .song-card-body {

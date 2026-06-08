@@ -41,8 +41,9 @@ const typeLabel = getTypeLabel(song.type);
   data-year={String(song.year)}
   data-title={song.title}
 >
-  <div class="song-card__cover">
-    <img class="song-card-image" src={coverSrc} alt={`${song.album || 'Singles'} cover`} loading="lazy" crossorigin="anonymous" />
+  <div class="song-card__cover card-cover-wrap">
+    <img class="song-card-image" src={coverSrc} alt={song.title} loading="lazy" crossorigin="anonymous" />
+    <div class="card-title-overlay">{song.title}</div>
     <div class="song-card__badge">
       <span class={`type-badge type-badge--${song.type}`}>{typeLabel}</span>
     </div>
