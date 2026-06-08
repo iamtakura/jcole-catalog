@@ -292,10 +292,11 @@ function initSongPage(container: Element) {
             heroOverlay.style.background = `linear-gradient(to bottom, rgba(${r1},${g1},${b1},0.15) 0%, #080808 70%)`;
           }
 
-          // Apply accent to mood tags border color
+          // Apply accent to mood tags border and background, keep text white
           container.querySelectorAll('.mood-tag').forEach(tag => {
             (tag as HTMLElement).style.borderColor = `rgba(${r1},${g1},${b1},0.6)`;
-            (tag as HTMLElement).style.color = `rgb(${r1},${g1},${b1})`;
+            (tag as HTMLElement).style.backgroundColor = `rgba(${r1},${g1},${b1},0.15)`;
+            (tag as HTMLElement).style.color = `#ffffff`;
           });
 
           // Apply to section headings like SUMMARY, THEMES etc

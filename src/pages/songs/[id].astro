@@ -41,6 +41,15 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
 
 <Base title={song.title} description={song.breakdown?.summary || `${song.title} by J. Cole`} namespace="song">
   <div class="song-detail">
+    <!-- Back button -->
+    <a href={`${base.replace(/\/$/, '')}/`} class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back to Catalog
+    </a>
+
     <!-- Spotify-style layered hero -->
     <div class="song-hero">
       <div class="hero-bg" style={`background-image: url('${song.cover_image}')`}></div>
@@ -54,7 +63,7 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
         />
         <div class="hero-info">
           <h1 class="song-detail__title">{song.title}</h1>
-          <p class="song-detail__album-link">{song.album || 'Single / Feature'}</p>
+          <p class="song-detail__album-link album-name">{song.album || 'Single / Feature'}</p>
 
           <!-- Meta Grid -->
           <div class="song-detail__meta-grid">
@@ -96,14 +105,6 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
 
     <!-- Content -->
     <div class="song-detail__content">
-      <!-- Back button -->
-      <a href={`${base.replace(/\/$/, '')}/`} class="back-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="19" y1="12" x2="5" y2="12"></line>
-          <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        Back to Catalog
-      </a>
 
       <!-- Breakdown -->
       {song.breakdown && (
@@ -164,7 +165,7 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
 <style>
   .song-hero {
     position: relative;
-    min-height: 60vh;
+    min-height: 70vh;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -192,18 +193,64 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
     z-index: 2;
     display: flex;
     align-items: flex-end;
-    gap: 2.5rem;
-    padding: 3rem;
+    gap: 3rem;
+    padding: 4rem 3rem;
     width: 100%;
   }
 
   .hero-cover {
-    width: 220px;
-    height: 220px;
+    width: 320px;
+    height: 320px;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 6px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     flex-shrink: 0;
+  }
+
+  .hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .hero-info h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    color: #ffffff;
+  }
+
+  .hero-info .album-name {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.5);
+    margin: 0;
+  }
+
+  .back-btn {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.2s;
+  }
+
+  .back-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
   }
 
   /* Override content negative margin to prevent overlap with Spotify-style hero details */
@@ -217,11 +264,11 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
     .hero-content {
       flex-direction: column;
       align-items: flex-start;
-      padding: 1.5rem;
+      padding: 2rem 1.5rem;
     }
     .hero-cover {
-      width: 160px;
-      height: 160px;
+      width: 180px;
+      height: 180px;
     }
   }
 </style>
@@ -256,7 +303,8 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
 
       document.querySelectorAll('.mood-tag').forEach(tag => {
         tag.style.borderColor = `rgba(${r1},${g1},${b1},0.6)`;
-        tag.style.color = `rgb(${r1},${g1},${b1})`;
+        tag.style.backgroundColor = `rgba(${r1},${g1},${b1},0.15)`;
+        tag.style.color = `#ffffff`;
       });
 
       document.querySelectorAll('.breakdown-label').forEach(el => {
