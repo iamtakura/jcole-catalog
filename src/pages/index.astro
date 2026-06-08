@@ -7,13 +7,10 @@ import songs from '../data/songs.json';
 
 <Base title="Catalog" namespace="home">
   <!-- Hero Section -->
-  <section class="hero">
-    <h1 class="hero__title">DREAMVILLE.</h1>
-    <p class="hero__subtitle">A J. Cole Archive</p>
-    <div class="hero__scroll-indicator">
-      <span>Scroll</span>
-      <div class="hero__scroll-line"></div>
-    </div>
+  <section class="catalog-hero">
+    <p class="hero-eyebrow">DREAMVILLE · 2020–2026</p>
+    <h1 class="hero-title">The Catalog.</h1>
+    <p class="hero-sub">53 songs. Three albums. One legacy.</p>
   </section>
 
   <!-- Catalog Section -->
@@ -29,7 +26,7 @@ import songs from '../data/songs.json';
       Showing <span>{songs.length}</span> songs
     </div>
 
-    <div class="song-grid" id="song-grid">
+    <div class="songs-grid" id="song-grid">
       {songs.map((song) => (
         <SongCard song={song} />
       ))}
@@ -40,3 +37,125 @@ import songs from '../data/songs.json';
     </div>
   </section>
 </Base>
+
+<style is:global>
+  .catalog-hero {
+    padding: 6rem 3rem 3rem;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .hero-title {
+    font-size: clamp(4rem, 10vw, 9rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    margin: 0 0 1.5rem;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.4);
+    margin: 0;
+  }
+
+  .song-card {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #111;
+    border: 1px solid #1a1a1a;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .song-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .song-card-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+  }
+
+  .song-card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .song-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .song-card-meta {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .song-card-moods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.25rem;
+  }
+
+  .mood-pill {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-pill {
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+  }
+
+  .filter-pill.active {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    font-weight: 700;
+  }
+
+  .songs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    padding: 2rem 3rem;
+  }
+
+  @media (max-width: 1024px) {
+    .songs-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .songs-grid { grid-template-columns: repeat(2, 1fr); padding: 1rem; }
+  }
+</style>

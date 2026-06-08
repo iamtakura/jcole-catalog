@@ -42,14 +42,14 @@ const typeLabel = getTypeLabel(song.type);
   data-title={song.title}
 >
   <div class="song-card__cover">
-    <img src={coverSrc} alt={`${song.album || 'Singles'} cover`} loading="lazy" crossorigin="anonymous" />
+    <img class="song-card-image" src={coverSrc} alt={`${song.album || 'Singles'} cover`} loading="lazy" crossorigin="anonymous" />
     <div class="song-card__badge">
       <span class={`type-badge type-badge--${song.type}`}>{typeLabel}</span>
     </div>
   </div>
-  <div class="song-card__body">
-    <h3 class="song-card__title">{song.title}</h3>
-    <div class="song-card__meta">
+  <div class="song-card__body song-card-body">
+    <h3 class="song-card__title song-card-title">{song.title}</h3>
+    <div class="song-card__meta song-card-meta">
       <span>{song.album || 'Single / Feature'}</span>
       <span class="song-card__meta-sep"></span>
       <span>{song.year}</span>
@@ -59,9 +59,9 @@ const typeLabel = getTypeLabel(song.type);
         feat. <span>{song.features.join(', ')}</span>
       </p>
     )}
-    <div class="song-card__moods">
+    <div class="song-card__moods song-card-moods">
       {song.mood.map((m) => (
-        <span class={`mood-tag mood-tag--${m}`}>{m}</span>
+        <span class={`mood-tag mood-tag--${m} mood-pill`}>{m}</span>
       ))}
     </div>
   </div>
