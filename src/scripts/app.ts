@@ -251,11 +251,11 @@ function initHomePage(container: Element) {
 // ─── Song Detail Page Init ──────────────────────────────────────────
 function initSongPage(container: Element) {
   // Parallax hero image
-  const heroImg = container.querySelector('.song-detail__hero-img');
+  const heroImg = container.querySelector('.hero-bg');
   if (heroImg && !prefersReducedMotion) {
     gsap.to(heroImg, {
       scrollTrigger: {
-        trigger: container.querySelector('.song-detail__hero'),
+        trigger: container.querySelector('.song-hero'),
         start: 'top top',
         end: 'bottom top',
         scrub: true,
@@ -266,7 +266,7 @@ function initSongPage(container: Element) {
   }
 
   // Color Thief for page background
-  const heroImgEl = container.querySelector('.song-detail__hero-img') as HTMLImageElement;
+  const heroImgEl = container.querySelector('.hero-cover') as HTMLImageElement;
   if (heroImgEl) {
     const applyPalette = () => {
       try {
@@ -279,28 +279,27 @@ function initSongPage(container: Element) {
 
           document.documentElement.style.setProperty('--accent', `rgb(${r1},${g1},${b1})`);
           document.documentElement.style.setProperty('--accent-secondary', `rgb(${r2},${g2},${b2})`);
-          document.documentElement.style.setProperty('--hero-glow', `rgba(${r1},${g1},${b1},0.15)`);
 
           // Apply glow to cover image
           const heroCover = container.querySelector('.hero-cover') as HTMLElement;
           if (heroCover) {
-            heroCover.style.boxShadow = `0 20px 60px rgba(${r1},${g1},${b1},0.4)`;
+            heroCover.style.boxShadow = `0 20px 60px rgba(${r1},${g1},${b1},0.5)`;
           }
 
           // Apply gradient tint to hero background overlay
           const heroOverlay = container.querySelector('.hero-overlay') as HTMLElement;
           if (heroOverlay) {
-            heroOverlay.style.background = `linear-gradient(to bottom, rgba(${r1},${g1},${b1},0.08) 0%, #080808 70%)`;
+            heroOverlay.style.background = `linear-gradient(to bottom, rgba(${r1},${g1},${b1},0.15) 0%, #080808 70%)`;
           }
 
           // Apply accent to mood tags border color
           container.querySelectorAll('.mood-tag').forEach(tag => {
-            (tag as HTMLElement).style.borderColor = `rgba(${r1},${g1},${b1},0.5)`;
+            (tag as HTMLElement).style.borderColor = `rgba(${r1},${g1},${b1},0.6)`;
             (tag as HTMLElement).style.color = `rgb(${r1},${g1},${b1})`;
           });
 
           // Apply to section headings like SUMMARY, THEMES etc
-          container.querySelectorAll('.breakdown__label').forEach(el => {
+          container.querySelectorAll('.breakdown-label').forEach(el => {
             (el as HTMLElement).style.color = `rgb(${r1},${g1},${b1})`;
           });
         }

@@ -9,7 +9,7 @@ export function getStaticPaths() {
   }));
 }
 
-const { song } = Astro.props;
+const { song: rawSong } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
 function getTypeLabel(type: string): string {
@@ -22,9 +22,15 @@ function getTypeLabel(type: string): string {
   return labels[type] || type;
 }
 
-const coverSrc = song.cover_image
-  ? `${base.replace(/\/$/, '')}/${song.cover_image.replace(/^\//, '')}`
+const coverSrc = rawSong.cover_image
+  ? `${base.replace(/\/$/, '')}/${rawSong.cover_image.replace(/^\//, '')}`
   : `${base.replace(/\/$/, '')}/images/covers/singles-features.png`;
+
+const song = {
+  ...rawSong,
+  cover_image: coverSrc
+};
+
 const typeLabel = getTypeLabel(song.type);
 
 // Find prev/next songs
@@ -36,16 +42,16 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
 <Base title={song.title} description={song.breakdown?.summary || `${song.title} by J. Cole`} namespace="song">
   <div class="song-detail">
     <!-- Spotify-style layered hero -->
-    <div class="song-hero song-detail__hero">
-      <!-- Blurred atmospheric background -->
-      <div class="hero-bg" style={`background-image: url('${coverSrc}')`}></div>
-      
-      <!-- Dark overlay -->
+    <div class="song-hero">
+      <div class="hero-bg" style={`background-image: url('${song.cover_image}')`}></div>
       <div class="hero-overlay"></div>
-      
-      <!-- Actual cover art + song info -->
       <div class="hero-content">
-        <img class="hero-cover song-detail__hero-img" src={coverSrc} alt={song.title} crossorigin="anonymous" />
+        <img
+          class="hero-cover"
+          src={song.cover_image}
+          alt={song.title}
+          crossorigin="anonymous"
+        />
         <div class="hero-info">
           <h1 class="song-detail__title">{song.title}</h1>
           <p class="song-detail__album-link">{song.album || 'Single / Feature'}</p>
@@ -104,14 +110,14 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
         <div class="breakdown">
           {song.breakdown.summary && (
             <div class="breakdown__section">
-              <div class="breakdown__label">Summary</div>
+              <div class="breakdown__label breakdown-label">Summary</div>
               <p class="breakdown__summary">{song.breakdown.summary}</p>
             </div>
           )}
 
           {song.breakdown.themes && song.breakdown.themes.length > 0 && (
             <div class="breakdown__section">
-              <div class="breakdown__label">Themes</div>
+              <div class="breakdown__label breakdown-label">Themes</div>
               <div class="breakdown__themes">
                 {song.breakdown.themes.map((theme: string) => (
                   <span class="breakdown__theme-tag">{theme}</span>
@@ -122,14 +128,14 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
 
           {song.breakdown.story && (
             <div class="breakdown__section">
-              <div class="breakdown__label">The Story</div>
+              <div class="breakdown__label breakdown-label">The Story</div>
               <p class="breakdown__text">{song.breakdown.story}</p>
             </div>
           )}
 
           {song.breakdown.inspiration && (
             <div class="breakdown__section">
-              <div class="breakdown__label">Inspiration</div>
+              <div class="breakdown__label breakdown-label">Inspiration</div>
               <p class="breakdown__text">{song.breakdown.inspiration}</p>
             </div>
           )}
@@ -223,55 +229,45 @@ const nextSong = currentIndex < songs.length - 1 ? songs[currentIndex + 1] : nul
 <script>
   import { getPaletteSync } from 'colorthief';
 
-  const cover = document.querySelector('.hero-cover') as HTMLImageElement;
-  
+  class ColorThief {
+    getPalette(img, count) {
+      const palette = getPaletteSync(img, { colorCount: count });
+      return palette.map(c => c.array ? c.array() : c);
+    }
+  }
+
+  const colorThief = new ColorThief();
+  const cover = document.querySelector('.hero-cover');
+
+  function applyPalette() {
+    try {
+      const palette = colorThief.getPalette(cover, 3);
+      const [r1, g1, b1] = palette[0];
+      const [r2, g2, b2] = palette[1];
+
+      document.documentElement.style.setProperty('--accent', `rgb(${r1},${g1},${b1})`);
+      document.documentElement.style.setProperty('--accent-secondary', `rgb(${r2},${g2},${b2})`);
+
+      document.querySelector('.hero-cover').style.boxShadow =
+        `0 20px 60px rgba(${r1},${g1},${b1},0.5)`;
+
+      document.querySelector('.hero-overlay').style.background =
+        `linear-gradient(to bottom, rgba(${r1},${g1},${b1},0.15) 0%, #080808 70%)`;
+
+      document.querySelectorAll('.mood-tag').forEach(tag => {
+        tag.style.borderColor = `rgba(${r1},${g1},${b1},0.6)`;
+        tag.style.color = `rgb(${r1},${g1},${b1})`;
+      });
+
+      document.querySelectorAll('.breakdown-label').forEach(el => {
+        el.style.color = `rgb(${r1},${g1},${b1})`;
+      });
+    } catch(e) {
+      console.error('ColorThief error:', e);
+    }
+  }
+
   if (cover) {
-    function applyPalette() {
-      try {
-        const palette = getPaletteSync(cover, { colorCount: 3 });
-        if (palette && palette.length > 0) {
-          const dominant = palette[0].array();
-          const secondary = palette[1] ? palette[1].array() : palette[0].array();
-
-          const r1 = dominant[0], g1 = dominant[1], b1 = dominant[2];
-          const r2 = secondary[0], g2 = secondary[1], b2 = secondary[2];
-
-          document.documentElement.style.setProperty('--accent', `rgb(${r1},${g1},${b1})`);
-          document.documentElement.style.setProperty('--accent-secondary', `rgb(${r2},${g2},${b2})`);
-          document.documentElement.style.setProperty('--hero-glow', `rgba(${r1},${g1},${b1},0.15)`);
-
-          // Apply glow to cover image
-          const heroCover = document.querySelector('.hero-cover') as HTMLElement;
-          if (heroCover) {
-            heroCover.style.boxShadow = `0 20px 60px rgba(${r1},${g1},${b1},0.4)`;
-          }
-
-          // Apply gradient tint to hero background overlay
-          const heroOverlay = document.querySelector('.hero-overlay') as HTMLElement;
-          if (heroOverlay) {
-            heroOverlay.style.background = `linear-gradient(to bottom, rgba(${r1},${g1},${b1},0.08) 0%, #080808 70%)`;
-          }
-
-          // Apply accent to mood tags border color
-          document.querySelectorAll('.mood-tag').forEach(tag => {
-            (tag as HTMLElement).style.borderColor = `rgba(${r1},${g1},${b1},0.5)`;
-            (tag as HTMLElement).style.color = `rgb(${r1},${g1},${b1})`;
-          });
-
-          // Apply to section headings like SUMMARY, THEMES etc
-          document.querySelectorAll('.breakdown__label').forEach(el => {
-            (el as HTMLElement).style.color = `rgb(${r1},${g1},${b1})`;
-          });
-        }
-      } catch (e) {
-        /* ignore */
-      }
-    }
-
-    if (cover.complete) {
-      applyPalette();
-    } else {
-      cover.addEventListener('load', applyPalette);
-    }
+    cover.complete ? applyPalette() : cover.addEventListener('load', applyPalette);
   }
 </script>
